@@ -8,7 +8,7 @@ class Board:
     def __init__(self):
         self.board = []
         self.white_left = self.black_left = 12
-        self.white_kings = self.black_kings = 0
+        self.white_queens = self.black_queens = 0
         self.create_board()
 
     def draw_squares(self, win):
@@ -18,7 +18,7 @@ class Board:
                 pygame.draw.rect(win, WHITE, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def evaluate(self):
-        return self.black_left - self.white_left + (self.black_kings * 0.5 - self.white_kings * 0.5)
+        return self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
 
     def get_all_pieces(self, color):
         pieces = []
@@ -33,11 +33,11 @@ class Board:
         piece.move(row, col)
 
         if row == ROWS - 1 or row == 0:
-            piece.make_king()
+            piece.make_queen()
             if piece.color == BLACK:
-                self.black_kings += 1
+                self.black_queens += 1
             else:
-                self.white_kings += 1
+                self.white_queens += 1
 
     def get_piece(self, row, col):
         return self.board[row][col]
@@ -87,10 +87,10 @@ class Board:
         right = piece.col + 1
         row = piece.row
 
-        if piece.color == WHITE or piece.king:
+        if piece.color == WHITE or piece.queen:
             moves.update(self._traverse_left(row - 1, max(row - 3, -1), -1, piece.color, left))
             moves.update(self._traverse_right(row - 1, max(row - 3, -1), -1, piece.color, right))
-        if piece.color == BLACK or piece.king:
+        if piece.color == BLACK or piece.queen:
             moves.update(self._traverse_left(row + 1, min(row + 3, ROWS), 1, piece.color, left))
             moves.update(self._traverse_right(row + 1, min(row + 3, ROWS), 1, piece.color, right))
 
