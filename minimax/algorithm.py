@@ -1,8 +1,8 @@
 from copy import deepcopy
 import pygame
 
-RED = (255,0,0)
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
 def minimax(position, depth, max_player, game):
     if depth == 0 or position.winner() != None:
@@ -11,7 +11,7 @@ def minimax(position, depth, max_player, game):
     if max_player:
         maxEval = float('-inf')
         best_move = None
-        for move in get_all_moves(position, WHITE, game):
+        for move in get_all_moves(position, BLACK, game):
             evaluation = minimax(move, depth-1, False, game)[0]
             maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
@@ -21,7 +21,7 @@ def minimax(position, depth, max_player, game):
     else:
         minEval = float('inf')
         best_move = None
-        for move in get_all_moves(position, RED, game):
+        for move in get_all_moves(position, WHITE, game):
             evaluation = minimax(move, depth-1, True, game)[0]
             minEval = min(minEval, evaluation)
             if minEval == evaluation:
