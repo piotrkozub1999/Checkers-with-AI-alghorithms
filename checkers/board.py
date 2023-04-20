@@ -1,6 +1,6 @@
 import pygame
 
-from .constants import BLACK, ROWS, SQUARE_SIZE, COLS, WHITE, BROWN
+from .constants import BLACK, ROWS, SQUARE_SIZE, COLS, WHITE, BROWN, LIGHT_BROWN
 from .piece import Piece
 
 
@@ -12,10 +12,12 @@ class Board:
         self.create_board()
 
     def draw_squares(self, win):
-        win.fill(BROWN)
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
-                pygame.draw.rect(win, WHITE, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+                pygame.draw.rect(win, LIGHT_BROWN, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+        for row in range(ROWS):
+            for col in range((row+1) % 2, COLS, 2):
+                pygame.draw.rect(win, BROWN, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def evaluate(self):
         return self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
