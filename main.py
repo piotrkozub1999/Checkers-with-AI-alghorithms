@@ -78,7 +78,7 @@ def main():
         if bot_buttons[3].checkClick():
             bot_depth = 4
         if bot_buttons[4].checkClick():
-            abot_depth = 5
+            bot_depth = 5
 
         group.update(event_list)
         group.draw(WIN)
