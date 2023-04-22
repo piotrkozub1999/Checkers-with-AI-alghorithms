@@ -7,17 +7,17 @@ class Piece:
     PADDING = 15
     OUTLINE = 2
 
-    def __init__(self, row, col, color):
+    def __init__(self, row, column, color):
         self.row = row
-        self.col = col
+        self.column = column
         self.color = color
         self.queen = False
         self.x = 0
         self.y = 0
-        self.calc_pos()
+        self.claculate_position()
 
-    def calc_pos(self):
-        self.x = SQUARE_SIZE * self.col + SQUARE_SIZE // 2
+    def claculate_position(self):
+        self.x = SQUARE_SIZE * self.column + SQUARE_SIZE // 2
         self.y = SQUARE_SIZE * self.row + SQUARE_SIZE // 2
 
     def make_queen(self):
@@ -30,10 +30,10 @@ class Piece:
         if self.queen:
             win.blit(CROWN, (self.x - CROWN.get_width() // 2, self.y - CROWN.get_height() // 2))
 
-    def move(self, row, col):
+    def move(self, row, column):
         self.row = row
-        self.col = col
-        self.calc_pos()
+        self.column = column
+        self.claculate_position()
 
     def __repr__(self):
         return str(self.color)
