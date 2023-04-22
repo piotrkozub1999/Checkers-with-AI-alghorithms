@@ -7,29 +7,29 @@ BLACK = (0, 0, 0)
 
 
 def minimax(position, depth, max_player, game):
-    if depth == 0 or position.winner() != None:
+    if depth == 0 or position.winner() is not None:
         return position.evaluate(), position
 
     if max_player:
-        maxEval = float('-inf')
+        max_eval = float('-inf')
         best_move = None
         for move in get_all_moves(position, BLACK, game):
             evaluation = minimax(move, depth - 1, False, game)[0]
-            maxEval = max(maxEval, evaluation)
-            if maxEval == evaluation:
+            max_eval = max(max_eval, evaluation)
+            if max_eval == evaluation:
                 best_move = move
 
-        return maxEval, best_move
+        return max_eval, best_move
     else:
-        minEval = float('inf')
+        min_eval = float('inf')
         best_move = None
         for move in get_all_moves(position, WHITE, game):
             evaluation = minimax(move, depth - 1, True, game)[0]
-            minEval = min(minEval, evaluation)
-            if minEval == evaluation:
+            min_eval = min(min_eval, evaluation)
+            if min_eval == evaluation:
                 best_move = move
 
-        return minEval, best_move
+        return min_eval, best_move
 
 
 def simulate_move(piece, move, board, game, skip):
