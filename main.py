@@ -1,6 +1,7 @@
 import pygame
+
 from RadioButton import RadioButton
-from checkers.constants import GUI_WIDTH, GUI_HEIGHT, SQUARE_SIZE, BLACK, WHITE, LIGHT_BLUE
+from checkers.constants import GUI_WIDTH, GUI_HEIGHT, SQUARE_SIZE, BLACK, LIGHT_BLUE
 from checkers.game import Game
 from minimax.algorithm import minimax
 
@@ -28,7 +29,7 @@ def main():
     font_bot = pygame.font.SysFont('Arial', 32, bold=True)
     bot_text = font_bot.render("Wybierz poziom przeciwnika:", True, BLACK)
     bot_textrect = bot_text.get_rect()
-    bot_textrect.center = ((1000, 50))
+    bot_textrect.center = (1000, 50)
 
     ##### BOT BUTTONS #####
     font_button = pygame.font.SysFont(None, 40)
@@ -39,8 +40,10 @@ def main():
         RadioButton(1025, 155, 125, 40, font_button, "AI 4"),
         RadioButton(937, 220, 125, 40, font_button, "AI 5")
     ]
+
     for rb in bot_buttons:
         rb.set_radio_buttons(bot_buttons)
+
     bot_buttons[0].clicked = True
     group = pygame.sprite.Group(bot_buttons)
 
@@ -54,7 +57,7 @@ def main():
             game.ai_move(new_board)
             print("Bot wykonał ruch z głębią = " + str(bot_depth))
 
-        if game.winner() != None:
+        if game.winner() is not None:
             print(game.winner())
             run = False
 
