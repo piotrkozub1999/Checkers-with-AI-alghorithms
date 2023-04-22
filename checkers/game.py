@@ -18,7 +18,7 @@ class Game:
         pygame.display.update()
 
     def winner(self):
-        return self.board.winner()
+        return self.board.winner()      # TODO: brak dostępnych ruchów
 
     def reset(self):
         self._init()
