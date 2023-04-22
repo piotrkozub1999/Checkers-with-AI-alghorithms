@@ -7,16 +7,19 @@ from .piece import Piece
 class Board:
     def __init__(self):
         self.board = []
-        self.white_left = self.black_left = 12
-        self.white_queens = self.black_queens = 0
+        self.white_left = 12
+        self.black_left = 12
+        self.white_queens = 0
+        self.black_queens = 0
         self.create_board()
 
-    def draw_squares(self, win):
+    @staticmethod
+    def draw_squares(win):
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(win, LIGHT_BROWN, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
         for row in range(ROWS):
-            for col in range((row+1) % 2, COLS, 2):
+            for col in range((row + 1) % 2, COLS, 2):
                 pygame.draw.rect(win, BROWN, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def evaluate(self):
@@ -30,9 +33,10 @@ class Board:
                     pieces.append(piece)
         return pieces
 
-    def move(self, piece, row, col):
-        self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
-        piece.move(row, col)
+    def move(self, piece, row, column):
+        self.board[piece.row][piece.column], self.board[row][column] = \
+            self.board[row][column], self.board[piece.row][piece.column]
+        piece.move(row, column)
 
         if row == ROWS - 1 or row == 0:
             piece.make_queen()
@@ -41,8 +45,8 @@ class Board:
             else:
                 self.white_queens += 1
 
-    def get_piece(self, row, col):
-        return self.board[row][col]
+    def get_piece(self, row, column):
+        return self.board[row][column]
 
     def create_board(self):
         for row in range(ROWS):
@@ -68,7 +72,7 @@ class Board:
 
     def remove(self, pieces):
         for piece in pieces:
-            self.board[piece.row][piece.col] = 0
+            self.board[piece.row][piece.column] = 0
             if piece != 0:
                 if piece.color == WHITE:
                     self.white_left -= 1
@@ -85,13 +89,14 @@ class Board:
 
     def get_valid_moves(self, piece):
         moves = {}
-        left = piece.col - 1
-        right = piece.col + 1
+        left = piece.column - 1
+        right = piece.column + 1
         row = piece.row
 
         if piece.color == WHITE or piece.queen:
             moves.update(self._traverse_left(row - 1, max(row - 3, -1), -1, piece.color, left))
             moves.update(self._traverse_right(row - 1, max(row - 3, -1), -1, piece.color, right))
+
         if piece.color == BLACK or piece.queen:
             moves.update(self._traverse_left(row + 1, min(row + 3, ROWS), 1, piece.color, left))
             moves.update(self._traverse_right(row + 1, min(row + 3, ROWS), 1, piece.color, right))
