@@ -70,3 +70,6 @@ class Game:
     def ai_move(self, board):
         self.board = board
         self.change_turn()
+
+    def show_hint(self, new_board):
+        raise NotImplementedError
