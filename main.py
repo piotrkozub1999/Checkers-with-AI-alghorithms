@@ -86,7 +86,8 @@ def main():
 
         if game.turn == WHITE and hint_depth != 0 and not hint_active:
             hint_active = True
-            value, new_board = minimax(game.get_board(), hint_depth, WHITE, game)
+            value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
+            game.get_hint(new_board)
             print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
 
         if game.winner() is not None:
