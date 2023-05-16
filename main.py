@@ -24,6 +24,7 @@ def main():
     WIN.fill(LIGHT_BLUE)
     game = Game(WIN)
     bot_depth = 1
+    hint_depth = 0
 
     ##### BOT TEXT #####
     font_bot = pygame.font.SysFont('Arial', 26, bold=True)
@@ -49,11 +50,12 @@ def main():
 
     ##### HINT BUTTONS #####
     hint_buttons = [
-        RadioButton(850, 590, 125, 40, font_button, "HINT 1"),
-        RadioButton(1025, 590, 125, 40, font_button, "HINT 2"),
-        RadioButton(850, 655, 125, 40, font_button, "HINT 3"),
-        RadioButton(1025, 655, 125, 40, font_button, "HINT 4"),
-        RadioButton(937, 720, 125, 40, font_button, "HINT 5")
+        RadioButton(850, 590, 125, 40, font_button, "NO HINT"),
+        RadioButton(1025, 590, 125, 40, font_button, "HINT 1"),
+        RadioButton(850, 655, 125, 40, font_button, "HINT 2"),
+        RadioButton(1025, 655, 125, 40, font_button, "HINT 3"),
+        RadioButton(850, 720, 125, 40, font_button, "HINT 4"),
+        RadioButton(1025, 720, 125, 40, font_button, "HINT 5")
     ]
 
     for rb in bot_buttons:
