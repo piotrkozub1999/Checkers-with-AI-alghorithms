@@ -41,16 +41,39 @@ def main():
         RadioButton(937, 220, 125, 40, font_button, "AI 5")
     ]
 
+    ##### HINT TEXT #####
+    font_hint = pygame.font.SysFont('Arial', 32, bold=True)
+    hint_text = font_hint.render("Wybierz poziom podpowiedzi:", True, BLACK)
+    hint_textrect = hint_text.get_rect()
+    hint_textrect.center = (1000, 550)
+
+    ##### HINT BUTTONS #####
+    hint_buttons = [
+        RadioButton(850, 590, 125, 40, font_button, "HINT 1"),
+        RadioButton(1025, 590, 125, 40, font_button, "HINT 2"),
+        RadioButton(850, 655, 125, 40, font_button, "HINT 3"),
+        RadioButton(1025, 655, 125, 40, font_button, "HINT 4"),
+        RadioButton(937, 720, 125, 40, font_button, "HINT 5")
+    ]
+
     for rb in bot_buttons:
         rb.set_radio_buttons(bot_buttons)
+
+    for hb in hint_buttons:
+        hb.set_radio_buttons(hint_buttons)
 
     bot_buttons[0].clicked = True
     group = pygame.sprite.Group(bot_buttons)
 
+    hint_buttons[0].clicked = True
+    group_h = pygame.sprite.Group(hint_buttons)
+
     ##### GAME LOOP #####
     while run:
         clock.tick(FPS)
+
         WIN.blit(bot_text, bot_textrect)
+        WIN.blit(hint_text, hint_textrect)
 
         if game.turn == BLACK:
             value, new_board = minimax(game.get_board(), bot_depth, BLACK, game)
@@ -85,6 +108,10 @@ def main():
 
         group.update(event_list)
         group.draw(WIN)
+
+        group_h.update(event_list)
+        group_h.draw(WIN)
+
         pygame.display.flip()
 
         game.update()
