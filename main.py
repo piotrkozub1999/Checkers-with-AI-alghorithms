@@ -26,7 +26,7 @@ def main():
     bot_depth = 1
 
     ##### BOT TEXT #####
-    font_bot = pygame.font.SysFont('Arial', 32, bold=True)
+    font_bot = pygame.font.SysFont('Arial', 26, bold=True)
     bot_text = font_bot.render("Wybierz poziom przeciwnika:", True, BLACK)
     bot_textrect = bot_text.get_rect()
     bot_textrect.center = (1000, 50)
@@ -42,7 +42,7 @@ def main():
     ]
 
     ##### HINT TEXT #####
-    font_hint = pygame.font.SysFont('Arial', 32, bold=True)
+    font_hint = pygame.font.SysFont('Arial', 26, bold=True)
     hint_text = font_hint.render("Wybierz poziom podpowiedzi:", True, BLACK)
     hint_textrect = hint_text.get_rect()
     hint_textrect.center = (1000, 550)
