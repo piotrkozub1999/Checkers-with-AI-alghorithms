@@ -11,7 +11,6 @@ def minimax(position, depth, max_player, game, hint=False):
         return position.evaluate(), position
 
     if not hint:
-
         if max_player:
             max_eval = float('-inf')
             best_move = None
@@ -34,21 +33,21 @@ def minimax(position, depth, max_player, game, hint=False):
 
     else:
         if max_player:
-            max_eval = float('-inf')
+            max_eval = float('inf')
             best_move = None
             for move in get_all_moves(position, WHITE, game):
                 evaluation = minimax(move, depth - 1, True, game)[0]
-                max_eval = max(max_eval, evaluation)
+                max_eval = min(max_eval, evaluation)
                 if max_eval == evaluation:
                     best_move = move
             return max_eval, best_move
 
         else:
-            min_eval = float('inf')
+            min_eval = float('-inf')
             best_move = None
             for move in get_all_moves(position, BLACk, game):
                 evaluation = minimax(move, depth - 1, False, game)[0]
-                min_eval = min(min_eval, evaluation)
+                min_eval = max(min_eval, evaluation)
                 if min_eval == evaluation:
                     best_move = move
         return min_eval, best_move

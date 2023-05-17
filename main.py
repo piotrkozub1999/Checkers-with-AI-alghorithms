@@ -118,6 +118,7 @@ def main():
 
         if hint_buttons[0].checkClick():
             hint_depth = 0
+            game.hint = None
         if hint_buttons[1].checkClick():
             hint_depth = 1
         if hint_buttons[2].checkClick():
