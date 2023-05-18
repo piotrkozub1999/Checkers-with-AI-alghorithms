@@ -1,7 +1,7 @@
 import pygame
 
 from RadioButton import RadioButton
-from checkers.constants import GUI_WIDTH, GUI_HEIGHT, SQUARE_SIZE, BLACK, LIGHT_BLUE
+from checkers.constants import GUI_WIDTH, GUI_HEIGHT, SQUARE_SIZE, BLACK, LIGHT_BLUE, WHITE
 from checkers.game import Game
 from minimax.algorithm import minimax
 
@@ -24,9 +24,11 @@ def main():
     WIN.fill(LIGHT_BLUE)
     game = Game(WIN)
     bot_depth = 1
+    hint_depth = 0
+    hint_active = False
 
     ##### BOT TEXT #####
-    font_bot = pygame.font.SysFont('Arial', 32, bold=True)
+    font_bot = pygame.font.SysFont('Arial', 26, bold=True)
     bot_text = font_bot.render("Wybierz poziom przeciwnika:", True, BLACK)
     bot_textrect = bot_text.get_rect()
     bot_textrect.center = (1000, 50)
@@ -41,21 +43,52 @@ def main():
         RadioButton(937, 220, 125, 40, font_button, "AI 5")
     ]
 
+    ##### HINT TEXT #####
+    font_hint = pygame.font.SysFont('Arial', 26, bold=True)
+    hint_text = font_hint.render("Wybierz poziom podpowiedzi:", True, BLACK)
+    hint_textrect = hint_text.get_rect()
+    hint_textrect.center = (1000, 550)
+
+    ##### HINT BUTTONS #####
+    hint_buttons = [
+        RadioButton(850, 590, 125, 40, font_button, "NO HINT"),
+        RadioButton(1025, 590, 125, 40, font_button, "HINT 1"),
+        RadioButton(850, 655, 125, 40, font_button, "HINT 2"),
+        RadioButton(1025, 655, 125, 40, font_button, "HINT 3"),
+        RadioButton(850, 720, 125, 40, font_button, "HINT 4"),
+        RadioButton(1025, 720, 125, 40, font_button, "HINT 5")
+    ]
+
     for rb in bot_buttons:
         rb.set_radio_buttons(bot_buttons)
+
+    for hb in hint_buttons:
+        hb.set_radio_buttons(hint_buttons)
 
     bot_buttons[0].clicked = True
     group = pygame.sprite.Group(bot_buttons)
 
+    hint_buttons[0].clicked = True
+    group_h = pygame.sprite.Group(hint_buttons)
+
     ##### GAME LOOP #####
     while run:
         clock.tick(FPS)
+
         WIN.blit(bot_text, bot_textrect)
+        WIN.blit(hint_text, hint_textrect)
 
         if game.turn == BLACK:
+            hint_active = False
             value, new_board = minimax(game.get_board(), bot_depth, BLACK, game)
             game.ai_move(new_board)
             print("Bot wykonał ruch z głębią = " + str(bot_depth))
+
+        if game.turn == WHITE and hint_depth != 0 and not hint_active:
+            hint_active = True
+            value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
+            game.get_hint(new_board)
+            print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
 
         if game.winner() is not None:
             print(game.winner())
@@ -83,8 +116,26 @@ def main():
         if bot_buttons[4].checkClick():
             bot_depth = 5
 
+        if hint_buttons[0].checkClick():
+            hint_depth = 0
+            game.hint = None
+        if hint_buttons[1].checkClick():
+            hint_depth = 1
+        if hint_buttons[2].checkClick():
+            hint_depth = 2
+        if hint_buttons[3].checkClick():
+            hint_depth = 3
+        if hint_buttons[4].checkClick():
+            hint_depth = 4
+        if hint_buttons[5].checkClick():
+            hint_depth = 5
+
         group.update(event_list)
         group.draw(WIN)
+
+        group_h.update(event_list)
+        group_h.draw(WIN)
+
         pygame.display.flip()
 
         game.update()

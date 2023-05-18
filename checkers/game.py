@@ -11,10 +11,17 @@ class Game:
         self.board = Board()
         self.turn = WHITE
         self.valid_moves = {}
+        self.hint = None
 
     def update(self):
         self.board.draw(self.win)
         self.draw_valid_moves(self.valid_moves)
+        if self.hint is not None:
+            pygame.draw.circle(self.win, (0, 255, 0), (self.hint[0].x, self.hint[0].y), 50, 5)
+            pygame.draw.circle(self.win, (0, 255, 0),
+                               (self.hint[1][1] * SQUARE_SIZE + SQUARE_SIZE // 2,
+                                self.hint[1][0] * SQUARE_SIZE + SQUARE_SIZE // 2), 15)
+
         pygame.display.update()
 
     def winner(self):
@@ -70,3 +77,17 @@ class Game:
     def ai_move(self, board):
         self.board = board
         self.change_turn()
+
+    def get_hint(self, board):
+        state = self.board
+        move = board
+
+        for i, row in enumerate(state.board):
+            for j, sq in enumerate(row):
+                if state.board[i][j] != 0 and move.board[i][j] == 0 and state.board[i][j].color == WHITE:
+                    chosen_piece = sq
+
+                elif state.board[i][j] == 0 and move.board[i][j] != 0 and move.board[i][j].color == WHITE:
+                    target = (i, j)
+
+        self.hint = (chosen_piece, target)
