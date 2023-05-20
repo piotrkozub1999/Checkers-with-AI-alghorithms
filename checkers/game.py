@@ -42,6 +42,9 @@ class Game:
             self.selected = piece
             self.valid_moves = self.board.get_valid_moves(piece)
             return True
+        elif piece == 0:
+            self.selected = None
+            self.valid_moves = {}
 
         return False
 

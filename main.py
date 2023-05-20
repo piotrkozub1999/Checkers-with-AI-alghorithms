@@ -104,6 +104,9 @@ def main():
                 if pos[0] < 800:
                     row, col = get_row_col_from_mouse(pos)
                     game.select(row, col)
+                else:
+                    game.selected = None
+                    game.valid_moves = {}
 
         if bot_buttons[0].checkClick():
             bot_depth = 1
