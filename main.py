@@ -80,6 +80,7 @@ def main():
 
         if game.turn == BLACK:
             hint_active = False
+            game.hint = None
             value, new_board = minimax(game.get_board(), bot_depth, BLACK, game)
             game.ai_move(new_board)
             print("Bot wykonał ruch z głębią = " + str(bot_depth))
@@ -87,11 +88,14 @@ def main():
         if game.turn == WHITE and hint_depth != 0 and not hint_active:
             hint_active = True
             value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
-            game.get_hint(new_board)
+
+            if game.winner() is None:
+                game.get_hint(new_board)
             print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
 
         if game.winner() is not None:
-            print(game.winner())
+            winner = "WHITE" if game.winner() == WHITE else "BLACK"
+            print(f"{winner} has won the game!")
             run = False
 
         event_list = pygame.event.get()
@@ -141,7 +145,8 @@ def main():
 
         pygame.display.flip()
 
-        game.update()
+        if run:
+            game.update()
 
     pygame.quit()
 
