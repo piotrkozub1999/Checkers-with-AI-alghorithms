@@ -25,7 +25,10 @@ class Game:
         pygame.display.update()
 
     def winner(self):
-        return self.board.winner()      # TODO: brak dostępnych ruchów
+        if self.board is None:
+            return WHITE if self.turn == WHITE else BLACK
+
+        return self.board.winner()
 
     def reset(self):
         self._init()
@@ -36,12 +39,16 @@ class Game:
             if not result:
                 self.selected = None
                 self.select(row, column)
-
         piece = self.board.get_piece(row, column)
+
         if piece != 0 and piece.color == self.turn:
             self.selected = piece
             self.valid_moves = self.board.get_valid_moves(piece)
             return True
+
+        elif piece == 0:
+            self.selected = None
+            self.valid_moves = {}
 
         return False
 
@@ -62,7 +69,8 @@ class Game:
         for move in moves:
             row, column = move
             pygame.draw.circle(self.win, RED,
-                               (column * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 15)
+                               (column * SQUARE_SIZE + SQUARE_SIZE // 2,
+                                row * SQUARE_SIZE + SQUARE_SIZE // 2), 15)
 
     def change_turn(self):
         self.valid_moves = {}
