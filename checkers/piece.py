@@ -35,5 +35,8 @@ class Piece:
         self.column = column
         self.claculate_position()
 
+    def getColor(self):
+        return self.color
+
     def __repr__(self):
         return str(self.color)

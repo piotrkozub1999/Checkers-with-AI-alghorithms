@@ -12,6 +12,16 @@ class Board:
         self.white_queens = 0
         self.black_queens = 0
         self.create_board()
+        self.weights = [
+            [4, 1, 2, 1, 1, 2, 1, 4],
+            [1, 4, 3, 2, 2, 3, 4, 1],
+            [2, 3, 4, 3, 3, 4, 3, 2],
+            [1, 2, 3, 4, 4, 3, 2, 1],
+            [1, 2, 3, 4, 4, 3, 2, 1],
+            [2, 3, 4, 3, 3, 4, 3, 2],
+            [1, 4, 3, 2, 2, 3, 4, 1],
+            [4, 1, 2, 1, 1, 2, 1, 4]
+        ]
 
     @staticmethod
     def draw_squares(win):
@@ -22,8 +32,21 @@ class Board:
             for col in range((row + 1) % 2, COLS, 2):
                 pygame.draw.rect(win, BROWN, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
+    # def evaluate(self):
+    #     return self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
+
     def evaluate(self):
-        return self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
+
+        score = self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                if self.board[i][j] != 0:
+                    if self.board[i][j].getColor() == BLACK:  # jeżeli jest to pionek bota
+                        score += self.weights[i][j]
+                    elif self.board[i][j].getColor() == WHITE:  # jeżeli jest to pionek przeciwnika
+                        score -= self.weights[i][j]
+        print(score)
+        return score
 
     def get_all_pieces(self, color):
         pieces = []
