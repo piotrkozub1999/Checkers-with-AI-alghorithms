@@ -7,8 +7,8 @@ from .piece import Piece
 class Board:
     def __init__(self):
         self.board = []
-        self.white_left = 1
-        self.black_left = 2
+        self.white_left = 12
+        self.black_left = 12
         self.white_queens = 0
         self.black_queens = 0
         self.create_board()
