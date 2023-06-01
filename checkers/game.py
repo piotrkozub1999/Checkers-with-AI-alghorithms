@@ -1,7 +1,7 @@
 import pygame
 
 from checkers.board import Board
-from .constants import RED, WHITE, SQUARE_SIZE, BLACK
+from .constants import RED, WHITE, SQUARE_SIZE, BLACK, MAX_MOVES
 
 
 class Game:
@@ -48,7 +48,7 @@ class Game:
             self.moves = 0
             self.pieces_num = self.board.pieces_left()
 
-        if self.moves >= 5:
+        if self.moves >= MAX_MOVES:
             return True
         else:
             return False
