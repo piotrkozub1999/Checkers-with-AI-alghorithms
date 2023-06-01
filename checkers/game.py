@@ -25,14 +25,16 @@ class Game:
         pygame.display.update()
 
     def winner(self):
-        blocked = True
+        if self.board is None:
+            return WHITE
 
-        for p in self.board.get_all_pieces(self.turn):
+        blocked = True
+        for p in self.board.get_all_pieces(WHITE):
             if self.board.get_valid_moves(p):
                 blocked = False
 
         if blocked:
-            return WHITE if self.turn == BLACK else WHITE
+            return BLACK
 
         return self.board.winner()
 
