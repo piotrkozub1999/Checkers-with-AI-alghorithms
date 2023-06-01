@@ -12,10 +12,14 @@ class Game:
         self.turn = WHITE
         self.valid_moves = {}
         self.hint = None
+        self.moves = 0
+        self.pieces_num = 24
+        self.draw = False
 
     def update(self):
         self.board.draw(self.win)
         self.draw_valid_moves(self.valid_moves)
+        self.draw = self.draw_check()
         if self.hint is not None:
             pygame.draw.circle(self.win, (0, 255, 0), (self.hint[0].x, self.hint[0].y), 50, 5)
             pygame.draw.circle(self.win, (0, 255, 0),
@@ -23,6 +27,7 @@ class Game:
                                 self.hint[1][0] * SQUARE_SIZE + SQUARE_SIZE // 2), 15)
 
         pygame.display.update()
+        return self.draw
 
     def winner(self):
         if self.board is None:
@@ -37,6 +42,16 @@ class Game:
             return BLACK
 
         return self.board.winner()
+
+    def draw_check(self):
+        if self.pieces_num != self.board.pieces_left():
+            self.moves = 0
+            self.pieces_num = self.board.pieces_left()
+
+        if self.moves >= 5:
+            return True
+        else:
+            return False
 
     def reset(self):
         self._init()
@@ -86,6 +101,10 @@ class Game:
             self.turn = BLACK
         else:
             self.turn = WHITE
+            self.moves += 1
+            print(self.moves)
+
+
 
     def get_board(self):
         return self.board
