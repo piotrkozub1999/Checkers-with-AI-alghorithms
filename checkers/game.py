@@ -102,7 +102,7 @@ class Game:
         else:
             self.turn = WHITE
             self.moves += 1
-            print(self.moves)
+            # print(f"Liczba ruchów bez bicia: {self.moves}")
 
 
 
