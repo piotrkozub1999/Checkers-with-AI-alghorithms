@@ -125,7 +125,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not ai_game:
                 pos = pygame.mouse.get_pos()
                 if pos[0] < 800:
                     row, col = get_row_col_from_mouse(pos)
