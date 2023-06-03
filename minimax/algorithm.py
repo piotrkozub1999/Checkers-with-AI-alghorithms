@@ -13,47 +13,18 @@ def minimax(position, depth, max_player, game, hint=False):
     if depth == 0 or position.winner() is not None:
         return position.evaluate(), position
 
-    if not hint:
-        if max_player:
-            max_eval = float('-inf')
-            best_move = None
-            for move in get_all_moves(position, BLACK, game):
-                evaluation = minimax(move, depth - 1, False, game)[0]
-                max_eval = max(max_eval, evaluation)
-                if max_eval == evaluation:
-                    best_move = move
-            return max_eval, best_move
+    best_move = None
+    lim_eval = float('-inf') if max_player == BLACK else float('inf')
+    opponent = WHITE if max_player == BLACK else BLACK
 
-        else:
-            min_eval = float('inf')
-            best_move = None
-            for move in get_all_moves(position, WHITE, game):
-                evaluation = minimax(move, depth - 1, True, game)[0]
-                min_eval = min(min_eval, evaluation)
-                if min_eval == evaluation:
-                    best_move = move
-        return min_eval, best_move
+    for move in get_all_moves(position, max_player, game):
+        evaluation = minimax(move, depth - 1, opponent, game)[0]
+        lim_eval = max(lim_eval, evaluation) if max_player == BLACK else min(lim_eval, evaluation)
 
-    else:
-        if max_player:
-            max_eval = float('inf')
-            best_move = None
-            for move in get_all_moves(position, WHITE, game):
-                evaluation = minimax(move, depth - 1, True, game)[0]
-                max_eval = min(max_eval, evaluation)
-                if max_eval == evaluation:
-                    best_move = move
-            return max_eval, best_move
+        if lim_eval == evaluation:
+            best_move = move
 
-        else:
-            min_eval = float('-inf')
-            best_move = None
-            for move in get_all_moves(position, BLACK, game):
-                evaluation = minimax(move, depth - 1, False, game)[0]
-                min_eval = max(min_eval, evaluation)
-                if min_eval == evaluation:
-                    best_move = move
-        return min_eval, best_move
+    return lim_eval, best_move
 
 
 def simulate_move(piece, move, board, game, skip):
