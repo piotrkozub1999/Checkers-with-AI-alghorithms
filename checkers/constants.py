@@ -14,4 +14,4 @@ LIGHT_BROWN = (233, 228, 212)
 BROWN = (101, 67, 33)
 LIGHT_BLUE = (230, 247, 255)
 CROWN = pygame.transform.scale(pygame.image.load('assets/crown.png'), (44, 25))
-MAX_MOVES = 5
+MAX_MOVES = 50
