@@ -99,14 +99,21 @@ def main():
             game.hint = None
             value, new_board = minimax(game.get_board(), bot_depth, BLACK, game)
             game.ai_move(new_board)
-            print("Bot wykonał ruch z głębią = " + str(bot_depth))
+            print("BLACK Bot wykonał ruch z głębią = " + str(bot_depth))
 
-        if game.turn == WHITE and hint_depth != 0 and not hint_active:
-            hint_active = True
-            value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
-            if game.winner() is None:
-                game.get_hint(new_board)
-            print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
+        if game.turn == WHITE:
+            if hint_depth != 0:
+                value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
+
+                if ai_game:
+                    game.ai_move(new_board)
+                    print("WHITE Bot wykonał ruch z głębią = " + str(bot_depth))
+
+                elif not hint_active:
+                    hint_active = True
+                    if game.winner() is None:
+                        game.get_hint(new_board)
+                    print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
 
         if game.winner() is not None:
             winner = "WHITE" if game.winner() == WHITE else "BLACK"
