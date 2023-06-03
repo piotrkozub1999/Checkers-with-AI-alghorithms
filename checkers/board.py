@@ -45,7 +45,7 @@ class Board:
                         score += self.weights[i][j]
                     elif self.board[i][j].getColor() == WHITE:  # jeżeli jest to pionek przeciwnika
                         score -= self.weights[i][j]
-        # print(score)
+        print(score)
         return score
 
     def get_all_pieces(self, color):

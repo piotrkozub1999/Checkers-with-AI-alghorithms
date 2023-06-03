@@ -1,14 +1,16 @@
 import pygame
+import pyautogui
 
 from RadioButton import RadioButton
 from checkers.constants import GUI_WIDTH, GUI_HEIGHT, SQUARE_SIZE, BLACK, LIGHT_BLUE, WHITE
 from checkers.game import Game
 from minimax.algorithm import minimax
 
+
 pygame.init()
 FPS = 60
 WIN = pygame.display.set_mode((GUI_WIDTH, GUI_HEIGHT))
-pygame.display.set_caption('Warcaby')
+pygame.display.set_caption('Checkers')
 
 
 def get_row_col_from_mouse(pos):
@@ -30,12 +32,12 @@ def main():
     font_text = pygame.font.SysFont('Arial', 30)
 
     ##### BOT TEXT #####
-    bot_text = font_text.render("Wybierz poziom czarnych:", True, BLACK)
+    bot_text = font_text.render("Choose the level of black", True, BLACK)
     bot_textrect = bot_text.get_rect()
     bot_textrect.center = (1000, 50)
 
     ##### BOT BUTTONS #####
-    font_button = pygame.font.SysFont(None, 40)
+    font_button = pygame.font.SysFont(None, 38)
     bot_buttons = [
         RadioButton(850, 90, 125, 40, font_button, "AI 1"),
         RadioButton(1025, 90, 125, 40, font_button, "AI 2"),
@@ -45,28 +47,28 @@ def main():
     ]
 
     ##### HINT TEXT #####
-    hint_text = font_text.render("Wybierz poziom podpowiedzi:", True, BLACK)
+    hint_text = font_text.render("Choose the level of white (hint)", True, BLACK)
     hint_textrect = hint_text.get_rect()
-    hint_textrect.center = (1000, 300)
+    hint_textrect.center = (1000, 320)
 
     ##### HINT BUTTONS #####
     hint_buttons = [
-        RadioButton(850, 340, 125, 40, font_button, "NO AI"),
-        RadioButton(1025, 340, 125, 40, font_button, "AI 1"),
-        RadioButton(850, 405, 125, 40, font_button, "AI 2"),
-        RadioButton(1025, 405, 125, 40, font_button, "AI 3"),
-        RadioButton(850, 470, 125, 40, font_button, "AI 4"),
-        RadioButton(1025, 470, 125, 40, font_button, "AI 5")
+        RadioButton(850, 360, 125, 40, font_button, "NO AI"),
+        RadioButton(1025, 360, 125, 40, font_button, "AI 1"),
+        RadioButton(850, 425, 125, 40, font_button, "AI 2"),
+        RadioButton(1025, 425, 125, 40, font_button, "AI 3"),
+        RadioButton(850, 490, 125, 40, font_button, "AI 4"),
+        RadioButton(1025, 490, 125, 40, font_button, "AI 5")
     ]
 
     ##### AI TEXT #####
-    ai_text = font_text.render("Wybierz tryb:", True, BLACK)
+    ai_text = font_text.render("Select a game mode", True, BLACK)
     ai_textrect = ai_text.get_rect()
     ai_textrect.center = (1000, 600)
 
     ##### AI Game Box #####
-    ai_buttons = [RadioButton(900, 640, 200, 40, font_button, "Game with AI"),
-                  RadioButton(900, 705, 200, 40, font_button, "Only AI Game")]
+    ai_buttons = [RadioButton(885, 640, 230, 40, font_button, "Game against AI"),
+                  RadioButton(885, 705, 230, 40, font_button, "AI Simulation")]
 
     for rb in bot_buttons:
         rb.set_radio_buttons(bot_buttons)
@@ -118,8 +120,9 @@ def main():
             game.last_move = WHITE
 
         if game.winner() is not None:
-            winner = "WHITE" if game.winner() == WHITE else "BLACK"
-            print(f"{winner} has won the game!")
+            winner = "White" if game.winner() == WHITE else "Black"
+            # print(f"{winner} has won the game!")
+            pyautogui.alert(f"{winner} has won the game!")
             run = False
 
         event_list = pygame.event.get()
@@ -167,7 +170,7 @@ def main():
 
         if ai_buttons[1].checkClick():
             if hint_buttons[0].clicked:
-                print("Wybierz poziom białych")
+                pyautogui.alert("Choose the level of WHITE first!")
                 ai_buttons[1].clicked = False
                 ai_buttons[0].clicked = True
             else:
@@ -188,7 +191,7 @@ def main():
             # game.draw_check()
             draw = game.update()
             if draw:
-                print("REMIS")
+                pyautogui.alert("The game end in a draw!")
                 run = False
 
     pygame.quit()
