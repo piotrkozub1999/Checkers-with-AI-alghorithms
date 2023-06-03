@@ -7,6 +7,9 @@ BLACK = (0, 0, 0)
 
 
 def minimax(position, depth, max_player, game, hint=False):
+    # if not position:          # test if everything works w/o this
+    #     return None, None
+
     if depth == 0 or position.winner() is not None:
         return position.evaluate(), position
 
