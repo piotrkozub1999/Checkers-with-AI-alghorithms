@@ -101,12 +101,23 @@ def main():
             game.hint = None
             value, new_board = minimax(game.get_board(), bot_depth, BLACK, game)
             game.ai_move(new_board)
+            print("BLACK Bot wykonał ruch z głębią = " + str(bot_depth))
+            game.last_move = BLACK
 
-        if game.turn == WHITE and hint_depth != 0 and not hint_active:
-            hint_active = True
-            value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
-            if game.winner() is None:
-                game.get_hint(new_board)
+        if game.turn == WHITE:
+            if hint_depth != 0:
+                value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
+                if ai_game:
+                    game.ai_move(new_board)
+                    print("WHITE Bot wykonał ruch z głębią = " + str(bot_depth))
+
+                elif not hint_active:
+                    hint_active = True
+                    if game.winner() is None:
+                        game.get_hint(new_board)
+                    print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
+
+            game.last_move = WHITE
 
         if game.winner() is not None:
             winner = "White" if game.winner() == WHITE else "Black"
@@ -119,11 +130,12 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not ai_game:
                 pos = pygame.mouse.get_pos()
                 if pos[0] < 800:
                     row, col = get_row_col_from_mouse(pos)
                     game.select(row, col)
+                    game.last_move = WHITE
                 else:
                     game.selected = None
                     game.valid_moves = {}

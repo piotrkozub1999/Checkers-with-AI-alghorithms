@@ -15,6 +15,7 @@ class Game:
         self.moves = 0
         self.pieces_num = 24
         self.draw = False
+        self.last_move = None
 
     def update(self):
         self.board.draw(self.win)
@@ -30,16 +31,22 @@ class Game:
         return self.draw
 
     def winner(self):
-        if self.board is None:
-            return WHITE
-
-        blocked = True
+        w_blocked, b_blocked = True, True
         for p in self.board.get_all_pieces(WHITE):
             if self.board.get_valid_moves(p):
-                blocked = False
+                w_blocked = False
 
-        if blocked:
+        for p in self.board.get_all_pieces(BLACK):
+            if self.board.get_valid_moves(p):
+                b_blocked = False
+
+        if w_blocked and b_blocked:
+            return self.last_move
+
+        if w_blocked:
             return BLACK
+        if b_blocked:
+            return WHITE
 
         return self.board.winner()
 
@@ -104,13 +111,12 @@ class Game:
             self.moves += 1
             # print(f"Liczba ruchów bez bicia: {self.moves}")
 
-
-
     def get_board(self):
         return self.board
 
     def ai_move(self, board):
-        self.board = board
+        if board:
+            self.board = board
         self.change_turn()
 
     def get_hint(self, board):
