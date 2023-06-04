@@ -12,16 +12,16 @@ class Board:
         self.white_queens = 0
         self.black_queens = 0
         self.create_board()
-        self.weights = [
-            [4, 1, 2, 1, 1, 2, 1, 4],
-            [1, 4, 3, 2, 2, 3, 4, 1],
-            [2, 3, 4, 3, 3, 4, 3, 2],
-            [1, 2, 3, 4, 4, 3, 2, 1],
-            [1, 2, 3, 4, 4, 3, 2, 1],
-            [2, 3, 4, 3, 3, 4, 3, 2],
-            [1, 4, 3, 2, 2, 3, 4, 1],
-            [4, 1, 2, 1, 1, 2, 1, 4]
-        ]
+        # self.weights = [
+        #     [4, 1, 2, 1, 1, 2, 1, 4],
+        #     [1, 4, 3, 2, 2, 3, 4, 1],
+        #     [2, 3, 4, 3, 3, 4, 3, 2],
+        #     [1, 2, 3, 4, 4, 3, 2, 1],
+        #     [1, 2, 3, 4, 4, 3, 2, 1],
+        #     [2, 3, 4, 3, 3, 4, 3, 2],
+        #     [1, 4, 3, 2, 2, 3, 4, 1],
+        #     [4, 1, 2, 1, 1, 2, 1, 4]
+        # ]
 
     @staticmethod
     def draw_squares(win):
@@ -35,18 +35,66 @@ class Board:
     # def evaluate(self):
     #     return self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
 
-    def evaluate(self):
+    # def evaluate(self):
+    #
+    #     score = self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
+    #     for i in range(len(self.board)):
+    #         for j in range(len(self.board[i])):
+    #             if self.board[i][j] != 0:
+    #                 if self.board[i][j].getColor() == BLACK:  # jeżeli jest to pionek bota
+    #                     score += self.weights[i][j]
+    #                 elif self.board[i][j].getColor() == WHITE:  # jeżeli jest to pionek przeciwnika
+    #                     score -= self.weights[i][j]
+    #     print(score)
+    #     return score
 
-        score = self.black_left - self.white_left + (self.black_queens * 0.5 - self.white_queens * 0.5)
+    def evaluate(self):
+        piece_connectivity = 0
+        piece_advancement = 0
+        piece_mobility = 0
+        central_control = 0
+        king_safety = 0
+
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if self.board[i][j] != 0:
-                    if self.board[i][j].getColor() == BLACK:  # jeżeli jest to pionek bota
-                        score += self.weights[i][j]
-                    elif self.board[i][j].getColor() == WHITE:  # jeżeli jest to pionek przeciwnika
-                        score -= self.weights[i][j]
-        print(score)
-        return score
+                    if self.board[i][j].getColor() == WHITE:
+                        if i < 5 and not self.board[i][j].queen:
+                            piece_advancement -= (5 - i)
+                        piece_mobility -= len(self.get_valid_moves(self.board[i][j]))
+                        if self.board[i][j].queen:
+                            king_safety -= 10
+                            king_safety += abs(i - len(self.board) // 2)
+                            king_safety += min(i, len(self.board) - 1 - i)
+
+                            threat_lvl = self.count_threatening_squares(i, j, BLACK)
+                            king_safety += threat_lvl
+
+                        piece_connectivity -= self.get_piece_connectivity(i, j, WHITE)
+
+                    elif self.board[i][j].getColor() == BLACK:
+                        if i > 4 and not self.board[i][j].queen:
+                            piece_advancement += (i - 4)
+                        piece_mobility += len(self.get_valid_moves(self.board[i][j]))
+
+                        if self.board[i][j].queen:
+                            king_safety += 10
+                            king_safety -= abs(i - len(self.board) // 2)
+                            king_safety -= min(i, len(self.board) - 1 - i)
+
+                            threat_lvl = self.count_threatening_squares(i, j, WHITE)
+                            king_safety -= threat_lvl
+
+                        piece_connectivity += self.get_piece_connectivity(i, j, BLACK)
+
+        score = self.black_left - self.white_left + \
+                2 * (self.black_queens - self.white_queens) + \
+                0.2 * piece_advancement + \
+                0.2 * piece_mobility + \
+                0.1 * king_safety + \
+                0.1 * piece_connectivity
+
+        return round(score, 1)
 
     def get_all_pieces(self, color):
         pieces = []
@@ -194,3 +242,30 @@ class Board:
 
     def pieces_left(self):
         return self.black_left + self.white_left
+
+    def count_threatening_squares(self, r, c, threatening_colour):
+        opponent_sq = 0
+        adj_sq = [(r - 1, c - 1), (r - 1, c + 1), (r + 1, c - 1), (r + 1, c + 1)]
+        for sqr, sqc in adj_sq:
+            if 0 <= sqr < len(self.board) and 0 <= sqc < len(self.board[sqr]):
+                if self.board[sqr][sqc] != 0:
+                    if self.board[sqr][sqc].getColor() == threatening_colour:
+                        opponent_sq += 1
+        return opponent_sq
+
+    def get_piece_connectivity(self, r, c, colour):
+        piece_connectivity = 0
+        central_region = (2, 2, len(self.board) - 3, len(self.board) - 3)
+        adj_sq = [(r - 1, c - 1), (r - 1, c + 1), (r + 1, c - 1), (r + 1, c + 1)]
+        for sqr, sqc in adj_sq:
+            if (central_region[0] <= sqr <= central_region[0] + central_region[2] and
+                    central_region[1] <= sqc <= central_region[1] + central_region[3]):
+                if self.board[sqr][sqc] != 0:
+                    if self.board[sqr][sqc].getColor() == colour:
+                        piece_connectivity += 1
+
+            if 0 <= sqr < len(self.board) and 0 <= sqc < len(self.board[sqr]):
+                if self.board[sqr][sqc] != 0:
+                    if self.board[sqr][sqc].getColor() == colour:
+                        piece_connectivity += 1
+        return piece_connectivity
