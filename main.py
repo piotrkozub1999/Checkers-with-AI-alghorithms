@@ -106,14 +106,15 @@ def main():
 
         if game.turn == WHITE:
             if hint_depth != 0:
-                value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
                 if ai_game:
+                    value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
                     game.ai_move(new_board)
                     print("WHITE Bot wykonał ruch z głębią = " + str(bot_depth))
 
                 elif not hint_active:
                     hint_active = True
-                    if game.winner() is None:
+                    if game.winner() is None and not game.hint:
+                        value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
                         game.get_hint(new_board)
                     print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
 
