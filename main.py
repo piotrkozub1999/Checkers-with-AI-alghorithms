@@ -1,11 +1,10 @@
-import pygame
 import pyautogui
+import pygame
 
 from RadioButton import RadioButton
 from checkers.constants import GUI_WIDTH, GUI_HEIGHT, SQUARE_SIZE, BLACK, LIGHT_BLUE, WHITE
 from checkers.game import Game
 from minimax.algorithm import minimax
-
 
 pygame.init()
 FPS = 60
@@ -109,7 +108,7 @@ def main():
                 if ai_game:
                     value, new_board = minimax(game.get_board(), hint_depth, WHITE, game)
                     game.ai_move(new_board)
-                    print("WHITE Bot wykonał ruch z głębią = " + str(bot_depth))
+                    print("WHITE Bot wykonał ruch z głębią = " + str(hint_depth))
 
                 elif not hint_active:
                     hint_active = True
