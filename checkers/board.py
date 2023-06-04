@@ -53,7 +53,7 @@ class Board:
         piece_advancement = 0
         piece_mobility = 0
         central_control = 0
-        king_safety = 0
+        queen_safety = 0
 
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
@@ -63,12 +63,12 @@ class Board:
                             piece_advancement -= (5 - i)
                         piece_mobility -= len(self.get_valid_moves(self.board[i][j]))
                         if self.board[i][j].queen:
-                            king_safety -= 10
-                            king_safety += abs(i - len(self.board) // 2)
-                            king_safety += min(i, len(self.board) - 1 - i)
+                            queen_safety -= 10
+                            queen_safety += abs(i - len(self.board) // 2)
+                            queen_safety += min(i, len(self.board) - 1 - i)
 
                             threat_lvl = self.count_threatening_squares(i, j, BLACK)
-                            king_safety += threat_lvl
+                            queen_safety += threat_lvl
 
                         piece_connectivity -= self.get_piece_connectivity(i, j, WHITE)
 
@@ -78,12 +78,12 @@ class Board:
                         piece_mobility += len(self.get_valid_moves(self.board[i][j]))
 
                         if self.board[i][j].queen:
-                            king_safety += 10
-                            king_safety -= abs(i - len(self.board) // 2)
-                            king_safety -= min(i, len(self.board) - 1 - i)
+                            queen_safety += 10
+                            queen_safety -= abs(i - len(self.board) // 2)
+                            queen_safety -= min(i, len(self.board) - 1 - i)
 
                             threat_lvl = self.count_threatening_squares(i, j, WHITE)
-                            king_safety -= threat_lvl
+                            queen_safety -= threat_lvl
 
                         piece_connectivity += self.get_piece_connectivity(i, j, BLACK)
 
@@ -91,7 +91,7 @@ class Board:
                 2 * (self.black_queens - self.white_queens) + \
                 0.2 * piece_advancement + \
                 0.2 * piece_mobility + \
-                0.1 * king_safety + \
+                0.1 * queen_safety + \
                 0.1 * piece_connectivity
 
         return round(score, 1)
