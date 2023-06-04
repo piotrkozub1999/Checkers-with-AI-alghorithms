@@ -1,3 +1,4 @@
+import random
 from copy import deepcopy
 
 import pygame
@@ -6,14 +7,16 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 
-def minimax(position, depth, max_player, game, hint=False):
+def minimax(position, depth, max_player, game):
     # if not position:          # test if everything works w/o this
     #     return None, None
 
     if depth == 0 or position.winner() is not None:
         return position.evaluate(), position
 
-    best_move = None
+    moves = []
+    # best_move = None
+    best_eval = None
     lim_eval = float('-inf') if max_player == BLACK else float('inf')
     opponent = WHITE if max_player == BLACK else BLACK
 
@@ -22,7 +25,12 @@ def minimax(position, depth, max_player, game, hint=False):
         lim_eval = max(lim_eval, evaluation) if max_player == BLACK else min(lim_eval, evaluation)
 
         if lim_eval == evaluation:
-            best_move = move
+            moves.append((move, lim_eval))
+            best_eval = lim_eval
+            # best_move = move
+
+    best_moves = [m for m in moves if m[1] == best_eval]
+    best_move = random.choice(best_moves)[0]
 
     return lim_eval, best_move
 
