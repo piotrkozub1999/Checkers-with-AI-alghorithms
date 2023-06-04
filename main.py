@@ -107,14 +107,14 @@ def main():
         if game.turn == WHITE:
             if hint_depth != 0:
                 if ai_game:
-                    value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
+                    value, new_board = minimax(game.get_board(), hint_depth, WHITE, game)
                     game.ai_move(new_board)
                     print("WHITE Bot wykonał ruch z głębią = " + str(bot_depth))
 
                 elif not hint_active:
                     hint_active = True
                     if game.winner() is None and not game.hint:
-                        value, new_board = minimax(game.get_board(), hint_depth, WHITE, game, True)
+                        value, new_board = minimax(game.get_board(), hint_depth, WHITE, game)
                         game.get_hint(new_board)
                     print(f"Wygenerowano podpowiedź z głębią = {hint_depth}")
 
@@ -122,7 +122,6 @@ def main():
 
         if game.winner() is not None:
             winner = "White" if game.winner() == WHITE else "Black"
-            # print(f"{winner} has won the game!")
             pyautogui.alert(f"{winner} has won the game!")
             run = False
 
@@ -192,7 +191,7 @@ def main():
             # game.draw_check()
             draw = game.update()
             if draw:
-                pyautogui.alert("The game end in a draw!")
+                pyautogui.alert("The game ends in a draw!")
                 run = False
 
     pygame.quit()
