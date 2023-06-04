@@ -8,9 +8,6 @@ BLACK = (0, 0, 0)
 
 
 def minimax(position, depth, max_player, game):
-    # if not position:          # test if everything works w/o this
-    #     return None, None
-
     if depth == 0 or position.winner() is not None:
         return position.evaluate(), position
 
@@ -28,7 +25,7 @@ def minimax(position, depth, max_player, game):
             best_eval = lim_eval
 
     best_moves = [m for m in moves if m[1] == best_eval]
-    best_move = random.choice(best_moves)[0]
+    best_move = random.choice(best_moves)[0] if len(best_moves) > 0 else None
 
     return lim_eval, best_move
 
