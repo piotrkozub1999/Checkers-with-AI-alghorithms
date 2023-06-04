@@ -15,7 +15,6 @@ def minimax(position, depth, max_player, game):
         return position.evaluate(), position
 
     moves = []
-    # best_move = None
     best_eval = None
     lim_eval = float('-inf') if max_player == BLACK else float('inf')
     opponent = WHITE if max_player == BLACK else BLACK
@@ -27,7 +26,6 @@ def minimax(position, depth, max_player, game):
         if lim_eval == evaluation:
             moves.append((move, lim_eval))
             best_eval = lim_eval
-            # best_move = move
 
     best_moves = [m for m in moves if m[1] == best_eval]
     best_move = random.choice(best_moves)[0]
