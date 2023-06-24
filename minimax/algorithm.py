@@ -9,6 +9,7 @@ BLACK = (0, 0, 0)
 
 def minimax(position, depth, max_player, game, alpha=float("-inf"), beta=float("inf")):
     if depth == 0 or position.winner() is not None:
+        # position.new_eval()
         return position.evaluate(), position
 
     moves = []

@@ -48,6 +48,95 @@ class Board:
     #     print(score)
     #     return score
 
+    def new_eval(self):
+        piece_connectivity = 0
+        piece_advancement = 0
+        piece_mobility = 0
+        queen_safety = 0
+
+        piece_diff = (self.black_left - self.white_left) +\
+            2 * (self.black_queens - self.white_queens)
+
+        for row in range(len(self.board)):
+            for col, piece in enumerate(self.board[row]):
+                spot = self.board[row][col]
+
+                # If there is a Piece on this square
+                if spot != 0:
+
+                    # If it's a BLACK Piece
+                    if spot.getColor() == BLACK:
+                        print(f"Black ({row}, {col})")
+
+                        # Piece advancement
+                        if row > 2 and not spot.queen:
+                            piece_advancement += (row - 2)
+
+                        # Piece connectivity
+                        neighbours = self.get_neighbours((row, col), spot.getColor())
+                        for n in neighbours:
+                            if n[0] < row:
+                                piece_connectivity += 1
+
+                        # Piece mobility
+                        neighbouring_empties = self.get_neighbours((row, col), 0)
+                        for n in neighbouring_empties:
+                            if n[0] > row or spot.queen:
+                                piece_mobility += 1
+
+                        # Queen safety
+                        if spot.queen:
+                            all_neighbours = self.get_neighbours((row, col), None)
+                            for n in all_neighbours:
+                                r, c = n
+                                if self.board[r][c].getColor() == spot.getColor():
+                                    queen_safety += 2
+                                else:
+                                    queen_safety -= 1
+
+                    # If it's a WHITE Piece
+                    if spot.getColor() == WHITE:
+                        print(f"White ({row}, {col})")
+
+                        # Piece advancement
+                        if row < 5 and not spot.queen:
+                            piece_advancement -= (5 - row)
+
+                        # Piece connectivity
+                        neighbours = self.get_neighbours((row, col), spot.getColor())
+                        for n in neighbours:
+                            if n[0] > row:
+                                piece_connectivity -= 1
+
+                        # Piece mobility
+                        neighbouring_empties = self.get_neighbours((row, col), 0)
+                        for n in neighbouring_empties:
+                            if n[0] < row or spot.queen:
+                                piece_mobility -= 1
+
+                        # Queen safety
+                        if spot.queen:
+                            all_neighbours = self.get_neighbours((row, col), None)
+                            for n in all_neighbours:
+                                r, c = n
+                                if self.board[r][c].getColor() == spot.getColor():
+                                    queen_safety -= 2
+                                else:
+                                    queen_safety += 1
+
+        print(f"PC = {piece_connectivity}\n"
+              f"PA = {piece_advancement}\n"
+              f"PM = {piece_mobility}\n"
+              f"QS = {queen_safety}")
+
+        score = piece_diff +\
+            piece_advancement * 0.2 +\
+            piece_mobility * 0.1 +\
+            piece_connectivity * 0.1 +\
+            queen_safety * 0.1
+
+        return score
+
     def evaluate(self):
         piece_connectivity = 0
         piece_advancement = 0
@@ -269,3 +358,25 @@ class Board:
                     if self.board[sqr][sqc].getColor() == colour:
                         piece_connectivity += 1
         return piece_connectivity
+
+    def get_neighbours(self, coords, color):
+        row, col = coords
+        adj_sqares = [(row - 1, col - 1),
+                      (row - 1, col + 1),
+                      (row + 1, col - 1),
+                      (row + 1, col + 1)]
+
+        adj_sqares = [(x, y) for (x, y) in adj_sqares if 0 <= x <= 7 and 0 <= y <= 7]
+        # All pieces
+        if color is None:
+            neighbours = [(r, c) for (r, c) in adj_sqares if
+                          self.board[r][c] != 0 and self.board[r][c] != 0]
+        # Friendly pieces
+        elif color != 0:
+            neighbours = [(r, c) for (r, c) in adj_sqares if
+                          self.board[r][c] != 0 and self.board[r][c].getColor() == color]
+        # Empty squares
+        else:
+            neighbours = [(r, c) for (r, c) in adj_sqares if self.board[r][c] == color]
+
+        return neighbours
