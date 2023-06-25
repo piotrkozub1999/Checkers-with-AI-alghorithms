@@ -7,27 +7,34 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 
-def minimax(position, depth, max_player, game, alpha=float("-inf"), beta=float("inf")):
+def minimax(position, depth, max_player, for_player, game, alpha, beta):
     if depth == 0 or position.winner() is not None:
-        # position.new_eval()
-        return position.evaluate(), position
+        return position.new_eval(), position
 
     moves = []
     best_eval = None
-    lim_eval = float('-inf') if max_player == BLACK else float('inf')
+    lim_eval = float("-inf") if max_player == BLACK else float("inf")
     opponent = WHITE if max_player == BLACK else BLACK
 
     for move in get_all_moves(position, max_player, game):
-        evaluation = minimax(move, depth - 1, opponent, game, alpha, beta)[0]
+        evaluation = minimax(move, depth - 1, opponent, for_player, game, alpha, beta)[0]
         lim_eval = max(lim_eval, evaluation) if max_player == BLACK else min(lim_eval, evaluation)
 
         if lim_eval == evaluation:
-            if max_player == BLACK:
-                alpha = max(alpha, lim_eval)
+            if for_player == BLACK:
+                if max_player == BLACK:
+                    alpha = max(alpha, lim_eval)
+                else:
+                    beta = min(beta, lim_eval)
             else:
-                beta = min(beta, lim_eval)
+                if max_player == WHITE:
+                    alpha = min(alpha, lim_eval)
+                else:
+                    beta = max(beta, lim_eval)
 
-            if beta <= alpha:
+            if for_player == BLACK and beta <= alpha:
+                break
+            elif for_player == WHITE and beta >= alpha:
                 break
 
             moves.append((move, lim_eval))

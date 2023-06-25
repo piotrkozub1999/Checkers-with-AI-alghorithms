@@ -86,7 +86,7 @@ def main():
 
     ai_buttons[0].clicked = True
     group_ai = pygame.sprite.Group(ai_buttons)
-    i = 0
+
     ##### GAME LOOP #####
     while run:
         clock.tick(FPS)
@@ -98,7 +98,7 @@ def main():
         if game.turn == BLACK:
             hint_active = False
             game.hint = None
-            value, new_board = minimax(game.get_board(), bot_depth, BLACK, game)
+            value, new_board = minimax(game.get_board(), bot_depth, BLACK, BLACK, game, float("-inf"), float("inf"))
             game.ai_move(new_board)
             print(f"BLACK Bot wykonał ruch z głębią {bot_depth}, (Move Score = {value})")
             game.last_move = BLACK
@@ -106,14 +106,16 @@ def main():
         if game.turn == WHITE:
             if hint_depth != 0:
                 if ai_game:
-                    value, new_board = minimax(game.get_board(), hint_depth, WHITE, game)
+                    value, new_board =\
+                        minimax(game.get_board(), hint_depth, WHITE, WHITE, game, float("inf"), float("-inf"))
                     game.ai_move(new_board)
                     print(f"WHITE Bot wykonał ruch z głębią {hint_depth}, (Move Score = {-value})")
 
                 elif not hint_active:
                     hint_active = True
                     if game.winner() is None and not game.hint:
-                        value, new_board = minimax(game.get_board(), hint_depth, WHITE, game)
+                        value, new_board =\
+                            minimax(game.get_board(), hint_depth, WHITE, WHITE, game, float("inf"), float("-inf"))
                         game.get_hint(new_board)
                         print(f"Wygenerowano podpowiedź z głębią {hint_depth}, (Move Score = {-value})")
 

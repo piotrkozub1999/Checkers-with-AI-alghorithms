@@ -48,7 +48,7 @@ class Board:
     #     print(score)
     #     return score
 
-    def new_eval(self):
+    def new_eval(self, verbose=False):
         piece_connectivity = 0
         piece_advancement = 0
         piece_mobility = 0
@@ -66,7 +66,8 @@ class Board:
 
                     # If it's a BLACK Piece
                     if spot.getColor() == BLACK:
-                        print(f"Black ({row}, {col})")
+                        if verbose:
+                            print(f"Black ({row}, {col})")
 
                         # Piece advancement
                         if row > 2 and not spot.queen:
@@ -84,19 +85,20 @@ class Board:
                             if n[0] > row or spot.queen:
                                 piece_mobility += 1
 
-                        # Queen safety
                         if spot.queen:
+                            # Queen safety
                             all_neighbours = self.get_neighbours((row, col), None)
                             for n in all_neighbours:
                                 r, c = n
-                                if self.board[r][c].getColor() == spot.getColor():
-                                    queen_safety += 2
-                                else:
+                                if self.board[r][c].getColor() != spot.getColor():
                                     queen_safety -= 1
+                                else:
+                                    queen_safety += 1
 
                     # If it's a WHITE Piece
                     if spot.getColor() == WHITE:
-                        print(f"White ({row}, {col})")
+                        if verbose:
+                            print(f"White ({row}, {col})")
 
                         # Piece advancement
                         if row < 5 and not spot.queen:
@@ -119,15 +121,16 @@ class Board:
                             all_neighbours = self.get_neighbours((row, col), None)
                             for n in all_neighbours:
                                 r, c = n
-                                if self.board[r][c].getColor() == spot.getColor():
-                                    queen_safety -= 2
+                                if self.board[r][c].getColor() != spot.getColor():
+                                    queen_safety += 2
                                 else:
-                                    queen_safety += 1
+                                    queen_safety -= 1
 
-        print(f"PC = {piece_connectivity}\n"
-              f"PA = {piece_advancement}\n"
-              f"PM = {piece_mobility}\n"
-              f"QS = {queen_safety}")
+        if verbose:
+            print(f"PC = {piece_connectivity}\n"
+                  f"PA = {piece_advancement}\n"
+                  f"PM = {piece_mobility}\n"
+                  f"QS = {queen_safety}\n")
 
         score = piece_diff +\
             piece_advancement * 0.2 +\
@@ -135,7 +138,7 @@ class Board:
             piece_connectivity * 0.1 +\
             queen_safety * 0.1
 
-        return score
+        return round(score, 1)
 
     def evaluate(self):
         piece_connectivity = 0
@@ -380,3 +383,6 @@ class Board:
             neighbours = [(r, c) for (r, c) in adj_sqares if self.board[r][c] == color]
 
         return neighbours
+
+    def get_threatened_squares(self, coords, color):
+        raise NotImplementedError
